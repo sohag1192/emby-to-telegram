@@ -3,10 +3,10 @@ import time
 from datetime import datetime, timedelta
 
 # Configuration - MOVE THESE TO ENVIRONMENT VARIABLES!
-TELEGRAM_TOKEN = '7575077293:AAE5r4l5z09U7IcHOAWmFMK_OONDkz9mnI8'
-TELEGRAM_CHAT_ID = '-1001881623282'
-EMBY_SERVER = 'http://100.100.100.6:8096'
-EMBY_API_KEY = 'c44824ad51a3400381df728a0d15b4d6'
+TELEGRAM_TOKEN="your_token_here"
+TELEGRAM_CHAT_ID="your_chat_id_here"
+EMBY_SERVER="http://your-emby-server:8096"
+EMBY_API_KEY="your_api_key_here"
 
 # Time between checks (in seconds)
 CHECK_INTERVAL = 1800 # 30 Min
