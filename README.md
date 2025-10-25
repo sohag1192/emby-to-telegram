@@ -1,18 +1,29 @@
+---
+
 # 🎬 Emby to Telegram Notifier
 
-This project automatically checks your **Emby Media Server** for newly added Movies and TV Series, and sends notifications to a **Telegram channel/group** using a bot.
+This project automatically checks your **Emby Media Server** for newly added Movies and TV Series, and sends rich notifications to a **Telegram channel/group** using a bot.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 - Polls Emby server at a configurable interval (default: every 30 minutes).
 - Detects newly added Movies and TV Series.
-- Sends rich Telegram notifications with:
+- Sends Telegram notifications with:
   - Title, year, and description
   - Poster image (if available)
   - Direct link to play in Emby
 - Avoids duplicate notifications by tracking already sent items.
 - Runs continuously as a **systemd service** on Linux.
+
+---
+
+## 📸 Screenshots
+
+| Example Notifications | |
+|-----------------------|--|
+| ![Screenshot 39](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_39.png) | ![Screenshot 40](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_40.png) |
+| ![Screenshot 41](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_41.png) | |
 
 ---
 
@@ -50,8 +61,6 @@ export TELEGRAM_CHAT_ID="-1001234567890"
 export EMBY_SERVER="http://your-emby-server:8096"
 export EMBY_API_KEY="your_emby_api_key"
 ```
-
-For persistence, add them to `~/.bashrc` or `~/.profile`.
 
 ---
 
@@ -111,6 +120,16 @@ journalctl -u emby-to-telegram.service -f
 
 ---
 
+## 📊 Star History & Visitors
+
+### ⭐ Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=sohag1192/emby-to-telegram&type=Date)](https://www.star-history.com/#sohag1192/emby-to-telegram&Date)
+
+### 👀 Visitor Counter
+![Visitor Count](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?style=for-the-badge&label=Visitors&color=blue)
+
+---
+
 ## 🔄 Updating
 
 To update the script:
@@ -128,4 +147,3 @@ This project is for personal use. Ensure you comply with Emby and Telegram API t
 
 ---
 
-👉 Do you want me to also add a **sample Telegram notification screenshot** section in the README (with placeholders), so your repo looks more polished on GitHub?
