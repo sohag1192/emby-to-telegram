@@ -23,7 +23,7 @@ This project automatically checks your **Emby Media Server** for newly added Mov
 | Example Notifications | |
 |-----------------------|--|
 | ![Screenshot 39](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_39.png) | ![Screenshot 40](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_40.png) |
-| ![Screenshot 41](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_41.png) | |
+| ![Screenshot 41](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_41.png) |  ![Screenshot 40](https://github.com/sohag1192/emby-to-telegram/blob/main/Screenshot_38.png) |
 
 ---
 
