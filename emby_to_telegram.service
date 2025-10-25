@@ -1,0 +1,13 @@
+[Unit]
+Description=Emby to Telegram Notifier
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/emby_notifier
+ExecStart=/root/emby_notifier/venv/bin/python /root/emby_notifier/emby_notifier/emby_to_telegram.py
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
