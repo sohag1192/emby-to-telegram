@@ -4,7 +4,7 @@ REM Author: Md. Sohag Rana
 REM GitHub: https://github.com/sohag1192
 
 :: === CONFIGURATION ===
-set "LOCAL_DIR=C:\Users\Md Sohag Rana\Downloads\GitHub\emby"
+set "LOCAL_DIR=%~dp0"
 set "REPO_URL=https://github.com/sohag1192/emby-to-telegram.git"
 set "USER_NAME=sohag1192"
 set "USER_EMAIL=sohag1192@gmail.com"
