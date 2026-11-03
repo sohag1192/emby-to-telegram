@@ -10,6 +10,8 @@ from datetime import datetime, timedelta, timezone
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
+__version__ = '3.0'
+
 # Configuration - Supports environment variables or default values
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '7575077293:AAEYDEH3s_FEwRjcJq6xV3oPrsjZPpncego')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1065232529')
@@ -357,7 +359,7 @@ def send_telegram_message(item, notified_ids):
         return False
 
 def main():
-    print("Starting Emby to Telegram notifier...")
+    print(f"Starting Emby to Telegram notifier v{__version__}...")
     while True:
         try:
             print("Checking for new content...")

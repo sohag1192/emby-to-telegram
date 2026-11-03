@@ -2,14 +2,16 @@
 
 # 🎬 Emby to Telegram Notifier
 
-An automated, lightweight background service for **Ubuntu / Linux** that monitors your **Emby Media Server** and broadcasts sleek, media-rich notifications with interactive action buttons directly to your **Telegram** channel, group, or private chat.
+An automated, lightweight background service for **Windows & Ubuntu / Linux** that monitors your **Emby Media Server** and broadcasts sleek, media-rich notifications with interactive action buttons directly to your **Telegram** channel, group, or private chat.
 
-[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
-[![GitHub Stars](https://img.shields.io/github/stars/sohag1192/emby-to-telegram?style=for-the-badge&color=f5c518)](https://github.com/sohag1192/emby-to-telegram/stargazers)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Release](https://img.shields.io/badge/Release-v3.0-blueviolet?style=for-the-badge&logo=github)](https://github.com/sohag1192/emby-to-telegram/releases)
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011%20%7C%20Server-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
+[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
+[![GitHub Stars](https://img.shields.io/github/stars/sohag1192/emby-to-telegram?style=for-the-badge&color=f5c518)](https://github.com/sohag1192/emby-to-telegram/stargazers)
 
 <br/>
 
@@ -58,6 +60,27 @@ An automated, lightweight background service for **Ubuntu / Linux** that monitor
 - 🟢 **Styled Interactive Buttons**: One-click **`[Watch on SN FTP SERVER]`** inline button linking directly to the Emby web player with native Telegram Bot API styling.
 - 🖼️ **High-Res Poster Art**: Downloads and attaches primary poster artwork with automatic fallback to text if an image is missing.
 - ⚡ **Lightweight & Fast**: Minimal CPU and memory usage.
+
+---
+
+## 🚀 What's New in Version 3.0 (v3.0)
+
+- 🪟 **Dedicated Windows Package (`windows/`)**:
+  - `install.bat`: 1-Click installer and automatic Windows Startup boot integration.
+  - `run.bat`: Always-Run console launcher with continuous auto-restart loop on crashes.
+  - `run_background.bat` & `run_hidden.vbs`: Windowless background runner for silent 24/7 service.
+  - `status.bat` & `stop.bat`: Instant process state inspection and 1-click process shutdown.
+- 🐧 **Dedicated Linux Package (`linux/`)**:
+  - `install.sh`: 1-Click Ubuntu / Debian installer with native `systemd` service setup.
+  - Management scripts: `status.sh`, `logs.sh`, `restart.sh`, `stop.sh`, `uninstall.sh`.
+- 🇧🇩 **Dedicated Bengali Edition (`emby_to_telegram_bn.py`)**:
+  - Full native Bengali card formatting, runtimes, ratings, and statuses.
+- 🛡️ **Double-Lock Protection & Text Fallback**:
+  - Complete duplicate filtering and automatic text fallback when poster images are unavailable.
+- 🧹 **Clean Repository Architecture**:
+  - Modular directory organization (`windows/`, `linux/`) and runtime files properly ignored in `.gitignore`.
+- 🚀 **Updated GitHub Deployment Tool (`upload_to_github.BAT`)**:
+  - Version-tagged git synchronization tool supporting release v3.0 tags and rebase workflows.
 
 ---
 

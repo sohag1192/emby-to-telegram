@@ -2,14 +2,16 @@
 
 # 🎬 এমবি টু টেলিগ্রাম নোটিফায়ার (Emby to Telegram Notifier)
 
-**উবুন্টু / লিনাক্স (Ubuntu / Linux)**-এর জন্য একটি স্বয়ংক্রিয় ও লাইটওয়েট ব্যাকগ্রাউন্ড সার্ভিস, যা আপনার **এমবি মিডিয়া সার্ভার (Emby Media Server)** প্রতিনিয়ত পর্যবেক্ষণ করে এবং নতুন যুক্ত হওয়া মুভি ও টিভি সিরিজের আকর্ষণীয় পোস্টার ও বিস্তারিত তথ্যসহ সরাসরি আপনার **টেলিগ্রাম** চ্যানেল, গ্রুপ বা চ্যাটে নোটিফিকেশন পাঠায়।
+**উইন্ডোজ এবং উবুন্টু / লিনাক্স (Windows & Ubuntu / Linux)**-এর জন্য একটি স্বয়ংক্রিয় ও লাইটওয়েট ব্যাকগ্রাউন্ড সার্ভিস, যা আপনার **এমবি মিডিয়া সার্ভার (Emby Media Server)** প্রতিনিয়ত পর্যবেক্ষণ করে এবং নতুন যুক্ত হওয়া মুভি ও টিভি সিরিজের আকর্ষণীয় পোস্টার ও বিস্তারিত তথ্যসহ সরাসরি আপনার **টেলিগ্রাম** চ্যানেল, গ্রুপ বা চ্যাটে নোটিফিকেশন পাঠায়।
 
-[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
-[![GitHub Stars](https://img.shields.io/github/stars/sohag1192/emby-to-telegram?style=for-the-badge&color=f5c518)](https://github.com/sohag1192/emby-to-telegram/stargazers)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Release](https://img.shields.io/badge/Release-v3.0-blueviolet?style=for-the-badge&logo=github)](https://github.com/sohag1192/emby-to-telegram/releases)
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011%20%7C%20Server-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
+[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
+[![GitHub Stars](https://img.shields.io/github/stars/sohag1192/emby-to-telegram?style=for-the-badge&color=f5c518)](https://github.com/sohag1192/emby-to-telegram/stargazers)
 
 <br/>
 
@@ -58,6 +60,27 @@
 - 🟢 **ইন্টারেক্টিভ ওয়াচ বাটন**: সরাসরি এমবি প্লেয়ারে নিয়ে যাওয়ার জন্য আকর্ষণীয় সবুজ **`[SN FTP SERVER-এ দেখুন]`** বাটন।
 - 🖼️ **হাই-রেজ্যুলেশন পোস্টার আর্ট**: সরাসরি অরিজিনাল পোস্টার ইমেজ ডাউনলোড করে পাঠায় (ইমেজ না থাকলে স্বয়ংক্রিয় টেক্সট ফলব্যাক)।
 - ⚡ **লাইটওয়েট ও সুপার ফাস্ট**: অত্যন্ত কম সিপিইউ ও র‍্যাম মেমোরি ব্যবহার করে।
+
+---
+
+## 🚀 নতুন ভার্সন ৩.০ আপডেট (What's New in v3.0)
+
+- 🪟 **উইন্ডোজের জন্য ডেডিকেটেড প্যাকেজ (`windows/`)**:
+  - `install.bat`: ১-ক্লিক ইনস্টলার এবং স্বয়ংক্রিয়ভাবে উইন্ডোজ বুটে চালু হওয়ার সুবিধা।
+  - `run.bat`: অলওয়েজ-রান কনসোল স্ক্রিপ্ট, যা ক্র্যাশ করলেও ১০ সেকেন্ড পর অটো-রিস্টার্ট হয়।
+  - `run_background.bat` ও `run_hidden.vbs`: কোনো উইন্ডো ছাড়া ২৪/৭ নীরবে ব্যাকগ্রাউন্ডে চলার সুবিধা।
+  - `status.bat` ও `stop.bat`: প্রসেস স্ট্যাটাস চেক ও ১-ক্লিকে সার্ভিস বন্ধ করার স্ক্রিপ্ট।
+- 🐧 **লিনাক্সের জন্য ডেডিকেটেড প্যাকেজ (`linux/`)**:
+  - `install.sh`: ১-ক্লিক ইনস্টলার ও নেটিভ systemd ব্যাকগ্রাউন্ড সার্ভিস।
+  - ম্যানেজমেন্ট স্ক্রিপ্টসমূহ: `status.sh`, `logs.sh`, `restart.sh`, `stop.sh`, `uninstall.sh`।
+- 🇧🇩 **স্বতন্ত্র বাংলা নোটিফায়ার ইঞ্জিন (`emby_to_telegram_bn.py`)**:
+  - খাঁটি বাংলা ভাষায় আকর্ষণীয় নোটিফিকেশন কার্ড, ফরম্যাটেড রানটাইম ও রেটিং।
+- 🛡️ **ডাবল-লক প্রোটেকশন ও টেক্সট ফলব্যাক**:
+  - কোনো কনটেন্ট কখনোই দুইবার যাবে না এবং ইমেজ না পেলে স্বয়ংক্রিয় টেক্সট নোটিফিকেশন যাবে।
+- 🧹 **পরিচ্ছন্ন প্রজেক্ট স্ট্রাকচার**:
+  - প্রতিটি ওএস অনুযায়ী সুন্দর ফোল্ডার বিন্যাস এবং অপ্রয়োজনীয় ক্যাশ(`.gitignore`)-এ যুক্ত।
+- 🚀 **আপগ্রেডেড গিটহাব আপলোড টুল (`upload_to_github.BAT`)**:
+  - স্বয়ংক্রিয় Git Tag v3.0 পুশ, রিবেস হ্যান্ডলিং এবং রিলিজ ম্যানেজমেন্ট।
 
 ---
 
