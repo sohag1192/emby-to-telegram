@@ -242,6 +242,8 @@ Inside `emby_to_telegram.py` (or via system environment variables):
 | `TELEGRAM_CHAT_ID` | Telegram Channel/Group/User ID | *Required* |
 | `EMBY_SERVER` | Base URL of your Emby server (e.g. `http://192.168.1.100:8096` or `https://emby.yourdomain.com`) | *Required* |
 | `EMBY_API_KEY` | Emby API Key (*Emby Dashboard > Advanced > API Keys*) | *Required* |
+| `BUTTON_TEXT` | Custom inline button text | `'Watch on SN FTP SERVER'` |
+| `TIMEZONE_OFFSET` | Timezone offset in hours (e.g. `6` for UTC+6) | `6` (UTC+6) |
 | `CHECK_INTERVAL` | Interval between library checks in seconds | `1800` (30 mins) |
 | `MESSAGE_DELAY` | Delay between consecutive Telegram messages in seconds | `10` |
 

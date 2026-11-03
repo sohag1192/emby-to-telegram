@@ -21,6 +21,10 @@ EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
 # Button text (can be customized via environment variable)
 BUTTON_TEXT = os.getenv('BUTTON_TEXT', 'Watch on SN FTP SERVER')
 
+# Timezone Configuration - Default: UTC+6 (Bangladesh Standard Time / BST)
+TIMEZONE_OFFSET = int(os.getenv('TIMEZONE_OFFSET', '6'))
+LOCAL_TZ = timezone(timedelta(hours=TIMEZONE_OFFSET))
+
 # Time between checks (in seconds)
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', '1800'))  # 30 Min
 MESSAGE_DELAY = int(os.getenv('MESSAGE_DELAY', '10'))     # 10 seconds between messages
@@ -50,7 +54,7 @@ def format_size(bytes_val):
     return f"{val:.2f} PB"
 
 def get_last_checked_time():
-    """Retrieve last check timestamp in UTC (matching Emby's DateCreated timezone)."""
+    """Retrieve last check timestamp in UTC+6."""
     try:
         with open(LAST_CHECKED_FILE, 'r') as f:
             content = f.read().strip()
@@ -58,8 +62,8 @@ def get_last_checked_time():
                 return datetime.strptime(content, '%m/%d/%Y %I:%M:%S %p')
     except (FileNotFoundError, ValueError):
         pass
-    # Fallback to 24 hours ago in UTC
-    return datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=24)
+    # Fallback to 24 hours ago in UTC+6
+    return datetime.now(LOCAL_TZ).replace(tzinfo=None) - timedelta(hours=24)
 
 def save_last_checked_time(check_time):
     with open(LAST_CHECKED_FILE, 'w') as f:
@@ -115,7 +119,7 @@ def mark_as_notified(item, notified_ids):
 
 def parse_emby_date(date_str):
     """
-    Parse Emby ISO 8601 date strings robustly.
+    Parse Emby ISO 8601 date strings robustly and convert from UTC to local timezone (UTC+6).
     Handles 7-digit fractional seconds (e.g. 2026-11-02T13:11:22.0000000Z).
     Returns datetime.min on error (NEVER datetime.now) so errors cannot cause duplicate alerts.
     """
@@ -127,23 +131,33 @@ def parse_emby_date(date_str):
         base, frac = clean_str.split('.', 1)
         clean_str = f"{base}.{frac[:6]}"
 
+    parsed_dt = None
     try:
-        return datetime.fromisoformat(clean_str)
+        parsed_dt = datetime.fromisoformat(clean_str)
     except Exception:
         pass
 
-    formats = [
-        '%m/%d/%Y %I:%M:%S %p',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y-%m-%dT%H:%M:%S'
-    ]
-    for fmt in formats:
-        try:
-            return datetime.strptime(clean_str, fmt)
-        except ValueError:
-            continue
+    if parsed_dt is None:
+        formats = [
+            '%m/%d/%Y %I:%M:%S %p',
+            '%Y-%m-%d %H:%M:%S',
+            '%Y-%m-%dT%H:%M:%S'
+        ]
+        for fmt in formats:
+            try:
+                parsed_dt = datetime.strptime(clean_str, fmt)
+                break
+            except ValueError:
+                continue
 
-    return datetime.min
+    if parsed_dt is None:
+        return datetime.min
+
+    # Convert Emby UTC timestamp to UTC+6
+    if parsed_dt.tzinfo is not None:
+        return parsed_dt.astimezone(LOCAL_TZ).replace(tzinfo=None)
+    else:
+        return (parsed_dt.replace(tzinfo=timezone.utc).astimezone(LOCAL_TZ)).replace(tzinfo=None)
 
 def get_recently_added_media():
     """Retrieve new movies and series that have not yet been notified."""
@@ -276,6 +290,12 @@ def build_message(item):
     if media_info:
         lines.append(f"🎞️ <b>Quality:</b> {html.escape(' | '.join(media_info))}")
 
+    # Added Date & Time (UTC+6)
+    if item.get('DateCreated'):
+        added_date = parse_emby_date(item['DateCreated'])
+        if added_date != datetime.min:
+            lines.append(f"🕒 <b>Added:</b> {added_date.strftime('%d %b %Y, %I:%M %p')} (UTC+6)")
+
     return "\n".join(lines)
 
 def build_keyboard(item, emby_url):
@@ -381,8 +401,8 @@ def main():
                     else:
                         print(f"Already notified: {item.get('Name')} (ID: {item.get('Id')})")
 
-            # Save check time in UTC
-            save_last_checked_time(datetime.now(timezone.utc).replace(tzinfo=None))
+            # Save check time in UTC+6
+            save_last_checked_time(datetime.now(LOCAL_TZ).replace(tzinfo=None))
             print(f"Check complete. Waiting {CHECK_INTERVAL} seconds until next check...")
             time.sleep(CHECK_INTERVAL)
 

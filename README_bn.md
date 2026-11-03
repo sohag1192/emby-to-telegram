@@ -241,6 +241,8 @@ journalctl -u emby_to_telegram.service -f
 | `TELEGRAM_CHAT_ID` | টেলিগ্রাম চ্যানেল, গ্রুপ বা ইউজার আইডি | *প্রয়োজনীয় (Required)* |
 | `EMBY_SERVER` | এমবি সার্ভারের অ্যাড্রেস (যেমন: `http://192.168.1.100:8096` বা `https://emby.yourdomain.com`) | *প্রয়োজনীয় (Required)* |
 | `EMBY_API_KEY` | এমবি এপিআই কি (*ড্যাশবোর্ড > অ্যাডভান্সড > এপিআই কি*) | *প্রয়োজনীয় (Required)* |
+| `BUTTON_TEXT` | কাস্টম ইনলাইন ওয়াচ বাটন টেক্সট | `'Watch on SN FTP SERVER'` |
+| `TIMEZONE_OFFSET` | টাইমজোন অফসেট (ঘণ্টায়, যেমন: UTC+6 এর জন্য `6`) | `6` (UTC+6) |
 | `CHECK_INTERVAL` | লাইব্রেরি চেক করার বিরতি (সেকেন্ডে) | `1800` (৩০ মিনিট) |
 | `MESSAGE_DELAY` | প্রতি মেসেজের মাঝে বিরতি (সেকেন্ডে) | `10` |
 
