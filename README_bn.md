@@ -266,6 +266,18 @@ sudo systemctl start emby_to_telegram.service
 
 ---
 
+## 🤝 অবদান ও যোগাযোগ (Contributing & Contact)
+
+যেকোনো ধরনের অবদান (Contribution), বাগ রিপোর্ট, নতুন ফিচারের আইডিয়া বা পুল রিকোয়েস্ট সাদরে গ্রহণযোগ্য!  
+আপনার যদি কোনো সমস্যা বা এই প্রজেক্ট আরও উন্নত করার কোনো আইডিয়া থাকে, নির্দ্বিধায় একটি [Issue](https://github.com/sohag1192/emby-to-telegram/issues) ওপেন করুন অথবা [Pull Request](https://github.com/sohag1192/emby-to-telegram/pulls) পাঠান।
+
+<p align="center">
+  📫 <b>Email:</b> <a href="mailto:sohag1192@gmail.com">sohag1192@gmail.com</a><br/>
+  💬 <b>Telegram:</b> <a href="https://t.me/Md_Sohag_Rana">@Md_Sohag_Rana</a>
+</p>
+
+---
+
 ## 📜 লাইসেন্স
 
 এই প্রজেক্টটি MIT লাইসেন্সের অধীনে উন্মুক্ত।

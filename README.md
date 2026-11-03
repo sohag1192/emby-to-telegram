@@ -267,6 +267,18 @@ sudo systemctl start emby_to_telegram.service
 
 ---
 
+## 🤝 Contributing & Contact
+
+Contributions, bug reports, feature suggestions, and pull requests are welcome!  
+If you find a bug or have an idea to improve the UI, feel free to open an [Issue](https://github.com/sohag1192/emby-to-telegram/issues) or submit a [Pull Request](https://github.com/sohag1192/emby-to-telegram/pulls).
+
+<p align="center">
+  📫 <b>Email:</b> <a href="mailto:sohag1192@gmail.com">sohag1192@gmail.com</a><br/>
+  💬 <b>Telegram:</b> <a href="https://t.me/Md_Sohag_Rana">@Md_Sohag_Rana</a>
+</p>
+
+---
+
 ## 📜 License
 
 This project is licensed under the MIT License.
