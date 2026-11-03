@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/emby-to-telegram
-ExecStart=/opt/emby-to-telegram/venv/bin/python /opt/emby-to-telegram/emby_to_telegram.py
+ExecStart=/opt/emby-to-telegram/venv/bin/python /opt/emby-to-telegram/emby_to_telegram_bn.py
 Restart=always
 RestartSec=10
 

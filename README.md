@@ -72,7 +72,7 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 
 ## 📦 Requirements
 
-* **Ubuntu / Debian Linux** (20.04 LTS, 22.04 LTS, 24.04 LTS, etc.)
+* **Ubuntu / Debian Linux** or **Windows (10 / 11 / Server)**
 * **Python 3.8+**
 * An active **Emby Media Server** with an API key
 * A **Telegram Bot Token** (from [@BotFather](https://t.me/BotFather))
@@ -80,7 +80,30 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 
 ---
 
+## 🪟 1-Click Windows Setup & 24/7 Running
+
+All Windows scripts are organized inside the **`windows/`** directory:
+
+| Script File | Path | Purpose & Features |
+| :--- | :--- | :--- |
+| **`install.bat`** | `windows/install.bat` | 🎬 **1-Click Installer**: Creates Python venv, installs requirements, and sets up Windows boot auto-start. |
+| **`run.bat`** | `windows/run.bat` | 🔄 **Always-Run Console**: Displays live logs and automatically restarts after 10s if disconnected or crashed. |
+| **`run_background.bat`** | `windows/run_background.bat` | 🚀 **Background Runner**: Runs silently 24/7 without keeping any open command prompt window. |
+| **`status.bat`** | `windows/status.bat` | 📊 **Status Check**: Instantly verifies if the notifier is running and displays its Process ID (PID). |
+| **`stop.bat`** | `windows/stop.bat` | 🛑 **Stop Service**: Terminates all running foreground and background notifier processes. |
+
+> 💡 **Tip**: You can also run the root `install.bat` or `run.bat` directly from the main repository directory.
+
+### How to use on Windows:
+1. Double-click **`windows/install.bat`** (or root `install.bat`) to set up the virtual environment and dependencies.
+2. When prompted, choose `Y` to enable automatic startup whenever Windows boots.
+3. Launch **`windows/run.bat`** for live console monitoring, or **`windows/run_background.bat`** to run silently 24/7 in the background.
+
+---
+
 ## ⚡ 1-Click Quick Installation (Ubuntu / Linux)
+
+All Linux scripts and service configurations are located in the **`linux/`** directory:
 
 1. **Clone the repository:**
    ```bash
@@ -96,12 +119,19 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 
 3. **Run the 1-click installer script:**
    ```bash
-   # For English notifications:
-   sudo bash install.sh
-
    # For Bengali (বাংলা) notifications:
-   sudo bash install.sh emby_to_telegram_bn.py
+   sudo bash linux/install.sh emby_to_telegram_bn.py
+
+   # Or for English notifications:
+   sudo bash linux/install.sh emby_to_telegram.py
    ```
+
+> 💡 **Linux Service Management Scripts (`linux/` directory):**
+> - **Check Status:** `sudo bash linux/status.sh`
+> - **View Live Logs:** `sudo bash linux/logs.sh`
+> - **Restart Service:** `sudo bash linux/restart.sh`
+> - **Stop Service:** `sudo bash linux/stop.sh`
+> - **Uninstall Service:** `sudo bash linux/uninstall.sh`
 
 > **What `install.sh` does automatically:**
 > - Installs Python, venv, and required system tools.
