@@ -92,10 +92,8 @@ All Windows scripts are organized inside the **`windows/`** directory:
 | **`status.bat`** | `windows/status.bat` | 📊 **Status Check**: Instantly verifies if the notifier is running and displays its Process ID (PID). |
 | **`stop.bat`** | `windows/stop.bat` | 🛑 **Stop Service**: Terminates all running foreground and background notifier processes. |
 
-> 💡 **Tip**: You can also run the root `install.bat` or `run.bat` directly from the main repository directory.
-
 ### How to use on Windows:
-1. Double-click **`windows/install.bat`** (or root `install.bat`) to set up the virtual environment and dependencies.
+1. Double-click **`windows/install.bat`** to set up the virtual environment and dependencies.
 2. When prompted, choose `Y` to enable automatic startup whenever Windows boots.
 3. Launch **`windows/run.bat`** for live console monitoring, or **`windows/run_background.bat`** to run silently 24/7 in the background.
 

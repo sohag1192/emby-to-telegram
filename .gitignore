@@ -4,3 +4,5 @@ __pycache__/
 venv/
 .env
 *.log
+emby_last_checked.txt
+emby_notified.txt
