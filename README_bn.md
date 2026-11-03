@@ -116,9 +116,17 @@
 | **`stop.bat`** | `windows/stop.bat` | 🛑 **সার্ভিস স্টপ**: চলমান নোটিফায়ার সার্ভিস সম্পূর্ণভাবে বন্ধ করতে। |
 
 ### ব্যবহারের নিয়ম:
-1. **`windows/install.bat`** ফাইলে ডাবল-ক্লিক করুন। এটি স্বয়ংক্রিয়ভাবে `venv` তৈরি ও প্যাকেজ ইনস্টল করবে।
-2. প্রম্পটে `Y` চাপলে এটি উইন্ডোজ স্টার্টআপ ফোল্ডারে যুক্ত হবে, ফলে কম্পিউটার অন করলেই স্বয়ংক্রিয়ভাবে ব্যাকগ্রাউন্ডে চালু হয়ে যাবে।
-3. সরাসরি লাইভ কনসোলে দেখতে চাইলে **`windows/run.bat`** চালান, অথবা উইন্ডো ছাড়াই ব্যাকগ্রাউন্ডে চালাতে **`windows/run_background.bat`** চালান।
+1. প্রথমে **`emby_to_telegram.py`** (বা **`emby_to_telegram_bn.py`**) ওপেন করে আপনার তথ্য বসিয়ে নিন:
+   ```python
+   # Configuration - Supports environment variables or default values
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+   ```
+2. **`windows/install.bat`** ফাইলে ডাবল-ক্লিক করুন। এটি স্বয়ংক্রিয়ভাবে `venv` তৈরি ও প্যাকেজ ইনস্টল করবে।
+3. প্রম্পটে `Y` চাপলে এটি উইন্ডোজ স্টার্টআপ ফোল্ডারে যুক্ত হবে, ফলে কম্পিউটার অন করলেই স্বয়ংক্রিয়ভাবে ব্যাকগ্রাউন্ডে চালু হয়ে যাবে।
+4. সরাসরি লাইভ কনসোলে দেখতে চাইলে **`windows/run.bat`** চালান, অথবা উইন্ডো ছাড়াই ব্যাকগ্রাউন্ডে চালাতে **`windows/run_background.bat`** চালান।
 
 ---
 
@@ -132,20 +140,34 @@
    cd /opt/emby-to-telegram
    ```
 
-2. **`emby_to_telegram.py` ফাইলটিতে আপনার তথ্য যুক্ত করুন:**
+2. **`emby_to_telegram.py` (বা `emby_to_telegram_bn.py`) ফাইলে তথ্য যুক্ত করুন:**
    ```bash
    nano emby_to_telegram.py
    ```
-   আপনার `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `EMBY_SERVER`, এবং `EMBY_API_KEY` সেট করুন।
+   কনফিগারেশন ব্লকে আপনার তথ্য বসান:
+   ```python
+   # Configuration - Supports environment variables or default values
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+   ```
 
 3. **ইনস্টলার স্ক্রিপ্টটি চালান:**
    ```bash
-   # বাংলা নোটিফিকেশনের জন্য:
-   sudo bash linux/install.sh emby_to_telegram_bn.py
-
-   # অথবা ইংরেজি নোটিফিকেশনের জন্য:
-   sudo bash linux/install.sh emby_to_telegram.py
+   sudo bash linux/install.sh
    ```
+   *ইনস্টলারটি স্বয়ংক্রিয়ভাবে একটি মেনু প্রদর্শন করবে যেখান থেকে আপনি ভাষা নির্বাচন করতে পারবেন:*
+   ```text
+   ==========================================================
+   🌐 Choose Notification Language / সংস্করণ নির্বাচন করুন:
+   ==========================================================
+     [1] English Notification   (emby_to_telegram.py)
+     [2] বাংলা / Bengali সংস্করণ (emby_to_telegram_bn.py)
+   ==========================================================
+   Select option [1 or 2] (Default: 1): 
+   ```
+   *(সরাসরি কমান্ডের মাধ্যমেও সিলেক্ট করতে পারেন: `sudo bash linux/install.sh 1` অথবা `sudo bash linux/install.sh 2`)*
 
 > 💡 **লিনাক্স সার্ভিস ম্যানেজমেন্ট স্ক্রিপ্টসমূহ (`linux/` ফোল্ডারে):**
 > - **স্ট্যাটাস দেখতে:** `sudo bash linux/status.sh`
@@ -217,7 +239,7 @@ journalctl -u emby_to_telegram.service -f
 | :--- | :--- | :--- |
 | `TELEGRAM_TOKEN` | [@BotFather](https://t.me/BotFather) থেকে প্রাপ্ত টেলিগ্রাম বট টোকেন | *প্রয়োজনীয় (Required)* |
 | `TELEGRAM_CHAT_ID` | টেলিগ্রাম চ্যানেল, গ্রুপ বা ইউজার আইডি | *প্রয়োজনীয় (Required)* |
-| `EMBY_SERVER` | এমবি সার্ভারের অ্যাড্রেস (যেমন: `http://100.100.100.6:8096`) | *প্রয়োজনীয় (Required)* |
+| `EMBY_SERVER` | এমবি সার্ভারের অ্যাড্রেস (যেমন: `http://192.168.1.100:8096` বা `https://emby.yourdomain.com`) | *প্রয়োজনীয় (Required)* |
 | `EMBY_API_KEY` | এমবি এপিআই কি (*ড্যাশবোর্ড > অ্যাডভান্সড > এপিআই কি*) | *প্রয়োজনীয় (Required)* |
 | `CHECK_INTERVAL` | লাইব্রেরি চেক করার বিরতি (সেকেন্ডে) | `1800` (৩০ মিনিট) |
 | `MESSAGE_DELAY` | প্রতি মেসেজের মাঝে বিরতি (সেকেন্ডে) | `10` |

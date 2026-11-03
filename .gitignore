@@ -6,3 +6,4 @@ venv/
 *.log
 emby_last_checked.txt
 emby_notified.txt
+selected_script.txt

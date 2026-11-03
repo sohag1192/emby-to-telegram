@@ -13,7 +13,6 @@ if hasattr(sys.stdout, 'reconfigure'):
 __version__ = '3.0'
 
 # Configuration - Supports environment variables or default values
-
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
 EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')

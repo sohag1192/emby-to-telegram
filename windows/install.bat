@@ -67,9 +67,26 @@ if !errorlevel! neq 0 (
 )
 echo ✅ All dependencies installed successfully.
 
-:: Step 4: Configure Auto-Start on Windows Boot
+:: Step 4: Choose Version
 echo.
-echo ⚙️ [4/4] Configuring Windows Auto-Start...
+echo ==========================================================
+echo 🌐 Choose Notification Language / সংস্করণ নির্বাচন করুন:
+echo ==========================================================
+echo   [1] English Notification   (emby_to_telegram.py)
+echo   [2] বাংলা / Bengali সংস্করণ (emby_to_telegram_bn.py)
+echo ==========================================================
+set /p LANG_CHOICE="Select an option (1-2) [Default: 1]: "
+if "%LANG_CHOICE%"=="2" (
+    set "TARGET_SCRIPT=emby_to_telegram_bn.py"
+) else (
+    set "TARGET_SCRIPT=emby_to_telegram.py"
+)
+echo !TARGET_SCRIPT!> "%ROOT_DIR%selected_script.txt"
+echo ✅ Selected Version: !TARGET_SCRIPT!
+
+:: Step 5: Configure Auto-Start on Windows Boot
+echo.
+echo ⚙️ [5/5] Configuring Windows Auto-Start...
 set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
 set "STARTUP_VBS=%STARTUP_FOLDER%\EmbyNotifier_AutoStart.vbs"
 

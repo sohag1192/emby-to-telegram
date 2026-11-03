@@ -116,9 +116,17 @@ All Windows scripts are organized inside the **`windows/`** directory:
 | **`stop.bat`** | `windows/stop.bat` | 🛑 **Stop Service**: Terminates all running foreground and background notifier processes. |
 
 ### How to use on Windows:
-1. Double-click **`windows/install.bat`** to set up the virtual environment and dependencies.
-2. When prompted, choose `Y` to enable automatic startup whenever Windows boots.
-3. Launch **`windows/run.bat`** for live console monitoring, or **`windows/run_background.bat`** to run silently 24/7 in the background.
+1. Open **`emby_to_telegram.py`** (or **`emby_to_telegram_bn.py`**) and set your credentials:
+   ```python
+   # Configuration - Supports environment variables or default values
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+   ```
+2. Double-click **`windows/install.bat`** to set up the virtual environment and dependencies.
+3. When prompted, choose `Y` to enable automatic startup whenever Windows boots.
+4. Launch **`windows/run.bat`** for live console monitoring, or **`windows/run_background.bat`** to run silently 24/7 in the background.
 
 ---
 
@@ -132,20 +140,34 @@ All Linux scripts and service configurations are located in the **`linux/`** dir
    cd /opt/emby-to-telegram
    ```
 
-2. **Configure your credentials in `emby_to_telegram.py`:**
+2. **Configure your credentials in `emby_to_telegram.py` (or `emby_to_telegram_bn.py`):**
    ```bash
    nano emby_to_telegram.py
    ```
-   Set your `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `EMBY_SERVER`, and `EMBY_API_KEY`.
+   Set your details in the configuration block:
+   ```python
+   # Configuration - Supports environment variables or default values
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+   ```
 
 3. **Run the 1-click installer script:**
    ```bash
-   # For Bengali (বাংলা) notifications:
-   sudo bash linux/install.sh emby_to_telegram_bn.py
-
-   # Or for English notifications:
-   sudo bash linux/install.sh emby_to_telegram.py
+   sudo bash linux/install.sh
    ```
+   *The installer will display an interactive menu to choose your language:*
+   ```text
+   ==========================================================
+   🌐 Choose Notification Language / সংস্করণ নির্বাচন করুন:
+   ==========================================================
+     [1] English Notification   (emby_to_telegram.py)
+     [2] বাংলা / Bengali সংস্করণ (emby_to_telegram_bn.py)
+   ==========================================================
+   Select option [1 or 2] (Default: 1): 
+   ```
+   *(You can also pass it directly as an argument: `sudo bash linux/install.sh 1` or `sudo bash linux/install.sh 2`)*
 
 > 💡 **Linux Service Management Scripts (`linux/` directory):**
 > - **Check Status:** `sudo bash linux/status.sh`
@@ -218,7 +240,7 @@ Inside `emby_to_telegram.py` (or via system environment variables):
 | :--- | :--- | :--- |
 | `TELEGRAM_TOKEN` | Bot API token from [@BotFather](https://t.me/BotFather) | *Required* |
 | `TELEGRAM_CHAT_ID` | Telegram Channel/Group/User ID | *Required* |
-| `EMBY_SERVER` | Base URL of your Emby server (e.g. `http://100.100.100.6:8096`) | *Required* |
+| `EMBY_SERVER` | Base URL of your Emby server (e.g. `http://192.168.1.100:8096` or `https://emby.yourdomain.com`) | *Required* |
 | `EMBY_API_KEY` | Emby API Key (*Emby Dashboard > Advanced > API Keys*) | *Required* |
 | `CHECK_INTERVAL` | Interval between library checks in seconds | `1800` (30 mins) |
 | `MESSAGE_DELAY` | Delay between consecutive Telegram messages in seconds | `10` |

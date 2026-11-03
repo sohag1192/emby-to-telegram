@@ -11,6 +11,11 @@ cd /d "%ROOT_DIR%"
 :: Determine script to run
 set "TARGET_SCRIPT=%~1"
 if "%TARGET_SCRIPT%"=="" (
+    if exist "%ROOT_DIR%selected_script.txt" (
+        set /p TARGET_SCRIPT=<"%ROOT_DIR%selected_script.txt"
+    )
+)
+if "%TARGET_SCRIPT%"=="" (
     if exist "%ROOT_DIR%emby_to_telegram_bn.py" (
         set "TARGET_SCRIPT=emby_to_telegram_bn.py"
     ) else (
