@@ -10,13 +10,43 @@ from datetime import datetime, timedelta, timezone
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
+def load_env_file(filepath='.env'):
+    """Load key-value pairs from a local .env file if it exists."""
+    if os.path.exists(filepath):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#') and '=' in line:
+                        k, v = line.split('=', 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k and k not in os.environ:
+                            os.environ[k] = v
+        except Exception:
+            pass
+
+load_env_file()
+
 __version__ = '3.0'
 
-# Configuration - Supports environment variables or default values
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
-EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
-EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+# ==========================================================
+# ⚙️ Configuration - Supports environment variables, .env file, or defaults
+# ==========================================================
+#
+# Examples / উদাহরণ:
+#   TELEGRAM_TOKEN    : Bot token from @BotFather (e.g. '123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ')
+#   TELEGRAM_CHAT_ID  : User/Group/Channel ID (e.g. '1065232529' or '-1001234567890')
+#   EMBY_SERVER       : Emby URL (e.g. 'http://192.168.1.100:8096' or 'https://emby.yourdomain.com')
+#   EMBY_API_KEY      : Emby API Key (Emby Dashboard > Advanced > API Keys)
+#
+# ==========================================================
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '123456789:AAF2RWn_4MIf3LJ04RZLTOGPXsUh_B1oIE')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '10652325429')
+EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://192.168.1.100:8096').rstrip('/')
+EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'API_Keys')
+
+
 
 # Button text (can be customized via environment variable)
 BUTTON_TEXT = os.getenv('BUTTON_TEXT', 'Watch on SN FTP SERVER')
