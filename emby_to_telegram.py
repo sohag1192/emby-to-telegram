@@ -16,6 +16,9 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1065232529')
 EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://100.100.100.6:8096').rstrip('/')
 EMBY_API_KEY = os.getenv('EMBY_API_KEY', '605d6b8a19804df390246b2373077ba9')
 
+# Notification language: 'en' for English, 'bn' for Bengali, 'both' for Bilingual
+NOTIFICATION_LANGUAGE = os.getenv('NOTIFICATION_LANGUAGE', 'en').lower()
+
 # Time between checks (in seconds)
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', '1800'))  # 30 Min
 MESSAGE_DELAY = int(os.getenv('MESSAGE_DELAY', '10'))     # 10 seconds between messages
@@ -216,17 +219,51 @@ def get_emby_item_url(item):
     server_id = item.get('ServerId', '')
     return f"{EMBY_SERVER}/web/index.html#!/item?id={item_id}&serverId={server_id}"
 
-def build_message(item):
+def build_message(item, lang=None):
     """Create a beautifully formatted, compact HTML message with media details."""
-    item_type = "Movie" if item.get('Type') == 'Movie' else "TV Series"
+    if lang is None:
+        lang = NOTIFICATION_LANGUAGE
+    is_movie = (item.get('Type') == 'Movie')
     raw_title = item.get('Name', 'Unknown Title')
     title = html.escape(raw_title)
     year = item.get('ProductionYear', '')
     title_line = f"{title} ({year})" if year else title
 
+    if lang == 'bn':
+        item_type = "মুভি" if is_movie else "টিভি সিরিজ"
+        header = f"🎬 <b>SN FTP SERVER-এ নতুন {item_type} যুক্ত হয়েছে</b>\n"
+        lbl_title = "📌 <b>শিরোনাম:</b>"
+        lbl_rating = "<b>রেটিং:</b>"
+        lbl_genres = "🎭 <b>ধরন:</b>"
+        lbl_runtime = "⏱️ <b>সময়সীমা:</b>"
+        lbl_rated = "🔞 <b>রেটেড:</b>"
+        lbl_status = "📺 <b>স্ট্যাটাস:</b>"
+        lbl_quality = "🎞️ <b>কোয়ালিটি:</b>"
+    elif lang == 'both':
+        item_type_en = "Movie" if is_movie else "TV Series"
+        item_type_bn = "মুভি" if is_movie else "টিভি সিরিজ"
+        header = f"🎬 <b>New {item_type_en} Added / নতুন {item_type_bn} যুক্ত হয়েছে [SN FTP SERVER]</b>\n"
+        lbl_title = "📌 <b>Title / শিরোনাম:</b>"
+        lbl_rating = "<b>Rating / রেটিং:</b>"
+        lbl_genres = "🎭 <b>Genres / ধরন:</b>"
+        lbl_runtime = "⏱️ <b>Runtime / সময়সীমা:</b>"
+        lbl_rated = "🔞 <b>Rated / রেটেড:</b>"
+        lbl_status = "📺 <b>Status / স্ট্যাটাস:</b>"
+        lbl_quality = "🎞️ <b>Quality / কোয়ালিটি:</b>"
+    else:
+        item_type = "Movie" if is_movie else "TV Series"
+        header = f"🎬 <b>New {item_type} Added to SN FTP SERVER</b>\n"
+        lbl_title = "📌 <b>Title:</b>"
+        lbl_rating = "<b>Rating:</b>"
+        lbl_genres = "🎭 <b>Genres:</b>"
+        lbl_runtime = "⏱️ <b>Runtime:</b>"
+        lbl_rated = "🔞 <b>Rated:</b>"
+        lbl_status = "📺 <b>Status:</b>"
+        lbl_quality = "🎞️ <b>Quality:</b>"
+
     lines = [
-        f"🎬 <b>New {item_type} Added to SN FTP SERVER</b>\n",
-        f"📌 <b>Title:</b> {title_line}"
+        header,
+        f"{lbl_title} {title_line}"
     ]
 
     # Community and Critic Ratings
@@ -236,25 +273,25 @@ def build_message(item):
     if item.get('CriticRating'):
         ratings.append(f"🍅 {item['CriticRating']}%")
     if ratings:
-        lines.append(f"<b>Rating:</b> {' | '.join(ratings)}")
+        lines.append(f"{lbl_rating} {' | '.join(ratings)}")
 
     # Genres
     genres = item.get('Genres')
     if genres:
-        lines.append(f"🎭 <b>Genres:</b> {html.escape(', '.join(genres))}")
+        lines.append(f"{lbl_genres} {html.escape(', '.join(genres))}")
 
     # Runtime
     runtime = format_runtime(item.get('RunTimeTicks'))
     if runtime:
-        lines.append(f"⏱️ <b>Runtime:</b> {runtime}")
+        lines.append(f"{lbl_runtime} {runtime}")
 
     # Official / Age Content Rating
     if item.get('OfficialRating'):
-        lines.append(f"🔞 <b>Rated:</b> {html.escape(str(item['OfficialRating']))}")
+        lines.append(f"{lbl_rated} {html.escape(str(item['OfficialRating']))}")
 
     # Series Status (Continuing / Ended)
     if item.get('Type') == 'Series' and item.get('Status'):
-        lines.append(f"📺 <b>Status:</b> {html.escape(str(item['Status']))}")
+        lines.append(f"{lbl_status} {html.escape(str(item['Status']))}")
 
     # Quality and File Size
     media_info = []
@@ -272,17 +309,27 @@ def build_message(item):
         if sz:
             media_info.append(sz)
     if media_info:
-        lines.append(f"🎞️ <b>Quality:</b> {html.escape(' | '.join(media_info))}")
+        lines.append(f"{lbl_quality} {html.escape(' | '.join(media_info))}")
 
     return "\n".join(lines)
 
-def build_keyboard(item, emby_url):
+def build_keyboard(item, emby_url, lang=None):
     """Generate interactive Telegram Inline Keyboard button with styling & colors."""
+    if lang is None:
+        lang = NOTIFICATION_LANGUAGE
+
+    if lang == 'bn':
+        btn_text = "SN FTP SERVER-এ দেখুন"
+    elif lang == 'both':
+        btn_text = "Watch on SN FTP SERVER | দেখুন"
+    else:
+        btn_text = "Watch on SN FTP SERVER"
+
     return {
         "inline_keyboard": [
             [
                 {
-                    "text": "Watch on SN FTP SERVER",
+                    "text": btn_text,
                     "url": emby_url,
                     "style": "success"
                 }

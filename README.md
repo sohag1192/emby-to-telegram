@@ -2,15 +2,25 @@
 
 # 🎬 Emby to Telegram Notifier
 
-An automated, lightweight background service for **Ubuntu / Linux** and **Windows** that monitors your **Emby Media Server** and broadcasts sleek, media-rich notifications with interactive action buttons directly to your **Telegram** channel, group, or private chat.
+An automated, lightweight background service for **Ubuntu / Linux** that monitors your **Emby Media Server** and broadcasts sleek, media-rich notifications with interactive action buttons directly to your **Telegram** channel, group, or private chat.
 
-[![Visitors](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?style=for-the-badge&label=Total%20Visitors&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
+[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
 [![GitHub Stars](https://img.shields.io/github/stars/sohag1192/emby-to-telegram?style=for-the-badge&color=f5c518)](https://github.com/sohag1192/emby-to-telegram/stargazers)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011%20%7C%20Server-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)](LICENSE)
+
+<br/>
+
+**Language / ভাষা:**
+[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
+[![বাংলা](https://img.shields.io/badge/Language-%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE-green?style=for-the-badge)](README_bn.md)
+
+<p align="center">
+  <a href="README.md">🇬🇧 <b>English</b></a> • 
+  <a href="README_bn.md">🇧🇩 <b>বাংলা (Bengali)</b></a>
+</p>
 
 <br/>
 
@@ -34,11 +44,10 @@ An automated, lightweight background service for **Ubuntu / Linux** and **Window
 
 ## ✨ Features
 
-- 🔄 **Autonomous 24/7 Background Service**:
-  - **Ubuntu / Linux**: Runs silently as a native `systemd` daemon with auto-restart on boot or crash.
-  - **Windows**: Silent background service with zero popup console windows and automatic launch on Windows boot.
+- 🔄 **Autonomous 24/7 Background Service**: Runs seamlessly as a native `systemd` daemon on Ubuntu/Linux with automatic restarts on crash or system boot.
 - 🛡️ **Guaranteed Duplicate Prevention**: Double-locking protection tracks both Emby Item IDs and normalized Title keys with immediate atomic disk persistence (`emby_notified.txt`). Items will **never** be sent twice.
 - 🎬 **Multi-Media Monitoring**: Automatically detects newly added **Movies** and **TV Series**.
+- 🌐 **Multilingual Notification Support**: Send notification alerts in **English (`en`)**, **Bengali (`bn`)**, or **Bilingual (`both`)**.
 - 📊 **Rich Metadata Cards**:
   - 📌 Title and release year
   - ⭐ Community Rating (`8.3/10`) & 🍅 Critic Rating (`73%`)
@@ -64,7 +73,7 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 
 ## 📦 Requirements
 
-* **Operating System**: Ubuntu / Debian Linux or Windows 10/11/Server
+* **Ubuntu / Debian Linux** (20.04 LTS, 22.04 LTS, 24.04 LTS, etc.)
 * **Python 3.8+**
 * An active **Emby Media Server** with an API key
 * A **Telegram Bot Token** (from [@BotFather](https://t.me/BotFather))
@@ -72,59 +81,36 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 
 ---
 
-## ⚡ 1-Click Quick Installers
+## ⚡ 1-Click Quick Installation (Ubuntu / Linux)
 
-We provide automated 1-click installer scripts for both **Ubuntu / Linux** and **Windows**:
-
-### 🐧 Option A: Ubuntu / Linux (1-Click Installer)
-
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
    sudo git clone https://github.com/sohag1192/emby-to-telegram.git /opt/emby-to-telegram
    cd /opt/emby-to-telegram
    ```
 
-2. Configure your credentials at the top of `emby_to_telegram.py`:
+2. **Configure your credentials in `emby_to_telegram.py`:**
    ```bash
    nano emby_to_telegram.py
    ```
+   Set your `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `EMBY_SERVER`, `EMBY_API_KEY`, and optional `NOTIFICATION_LANGUAGE` (`en` or `bn`).
 
-3. Run the installer script:
+3. **Run the 1-click installer script:**
    ```bash
    sudo bash install.sh
    ```
 
-> **What it does automatically:**
-> - Installs Python, venv, and system packages.
-> - Builds the virtual environment and installs dependencies.
-> - Configures and registers the `emby-to-telegram.service` in systemd.
-> - Enables auto-start on boot and starts the service in the background immediately!
-
----
-
-### 🪟 Option B: Windows (1-Click Background Auto-Runner)
-
-1. Download or clone this repository to a folder on your computer (e.g. `D:\emby_notifier`).
-2. Edit `emby_to_telegram.py` with Notepad to add your Telegram Token, Chat ID, and Emby API key.
-3. **Double-click `install_windows.bat`**.
-
-> **What it does automatically:**
-> - Checks Python installation.
-> - Sets up the virtual environment (`venv`) and installs requirements.
-> - Configures a silent background auto-start shortcut in your Windows Startup folder.
-> - Launches the notifier immediately in the background using `pythonw.exe` (no black terminal window).
-
-#### Managing on Windows:
-| Action | File to Run |
-| :--- | :--- |
-| **Start in Background** | Double-click `start_windows.bat` |
-| **Stop Background Process** | Double-click `stop_windows.bat` |
+> **What `install.sh` does automatically:**
+> - Installs Python, venv, and required system tools.
+> - Creates isolated virtual environment and installs dependencies.
+> - Configures and registers `emby-to-telegram.service` in systemd.
+> - Enables automatic startup on boot and starts the service immediately.
 
 ---
 
 ## 📖 Manual Installation (Ubuntu Linux)
 
-If you prefer to configure everything manually on Ubuntu:
+If you prefer to configure everything step-by-step manually:
 
 ### Step 1: Install System Dependencies
 ```bash
@@ -179,6 +165,7 @@ Inside `emby_to_telegram.py` (or via system environment variables):
 | `TELEGRAM_CHAT_ID` | Telegram Channel/Group/User ID | *Required* |
 | `EMBY_SERVER` | Base URL of your Emby server (e.g. `http://100.100.100.6:8096`) | *Required* |
 | `EMBY_API_KEY` | Emby API Key (*Emby Dashboard > Advanced > API Keys*) | *Required* |
+| `NOTIFICATION_LANGUAGE` | Notification language: `en` (English), `bn` (বাংলা), or `both` | `'en'` |
 | `CHECK_INTERVAL` | Interval between library checks in seconds | `1800` (30 mins) |
 | `MESSAGE_DELAY` | Delay between consecutive Telegram messages in seconds | `10` |
 
@@ -187,15 +174,10 @@ Inside `emby_to_telegram.py` (or via system environment variables):
 ## 🔄 Updating to Latest Version
 
 ```bash
-# On Linux
 cd /opt/emby-to-telegram
 sudo systemctl stop emby_to_telegram.service
 git pull
 sudo systemctl start emby_to_telegram.service
-
-# On Windows
-git pull
-call start_windows.bat
 ```
 
 ---
@@ -223,8 +205,8 @@ call start_windows.bat
 
 ## 📊 Star History & Visitor Count
 
-### 👀 Total Visitors
-[![Visitor Counter](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?style=for-the-badge&label=Total%20Visitors&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
+### 👀 Daily & Total Hits
+[![Daily & Total Hits](https://hits.sh/github.com/sohag1192/emby-to-telegram.svg?view=today-total&style=for-the-badge&label=Daily%20%2F%20Total%20Hits&color=007ec6)](https://hits.sh/github.com/sohag1192/emby-to-telegram/)
 
 ### ⭐ Star History
 [![Star History Chart](https://api.star-history.com/svg?repos=sohag1192/emby-to-telegram&type=Date)](https://www.star-history.com/#sohag1192/emby-to-telegram&Date)
