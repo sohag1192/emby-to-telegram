@@ -16,6 +16,9 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1065232529')
 EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://100.100.100.6:8096').rstrip('/')
 EMBY_API_KEY = os.getenv('EMBY_API_KEY', '605d6b8a19804df390246b2373077ba9')
 
+# Button text (can be customized via environment variable)
+BUTTON_TEXT = os.getenv('BUTTON_TEXT', 'Watch on SN FTP SERVER')
+
 # Time between checks (in seconds)
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', '1800'))  # 30 Min
 MESSAGE_DELAY = int(os.getenv('MESSAGE_DELAY', '10'))     # 10 seconds between messages
@@ -74,7 +77,7 @@ def append_notified_item(item_key):
         f.write(f"{item_key}\n")
 
 def is_already_notified(item, notified_ids):
-    """Bulletproof check: Verify by both Emby ID and Title+Year key."""
+    """Bulletproof check: Verify by both Emby Item ID and Title+Year key."""
     item_id = str(item.get('Id', '')).strip()
     if item_id and item_id in notified_ids:
         return True
@@ -141,7 +144,8 @@ def parse_emby_date(date_str):
     return datetime.min
 
 def get_recently_added_media():
-    last_checked = get_last_checked_time()
+    """Retrieve new movies and series that have not yet been notified."""
+    notified_ids = get_notified_items()
     fields = 'Genres,CommunityRating,CriticRating,OfficialRating,RunTimeTicks,MediaSources,Path,DateCreated,PremiereDate,ServerId,ProductionYear,Status'
 
     # Get movies
@@ -177,10 +181,8 @@ def get_recently_added_media():
         movies = response.json().get('Items', [])
 
         for movie in movies:
-            if 'DateCreated' in movie:
-                date_added = parse_emby_date(movie['DateCreated'])
-                if date_added > last_checked:
-                    new_items.append(movie)
+            if not is_already_notified(movie, notified_ids):
+                new_items.append(movie)
 
         # Fetch TV shows
         response = requests.get(series_url, params=series_params, timeout=30)
@@ -188,10 +190,8 @@ def get_recently_added_media():
         series = response.json().get('Items', [])
 
         for show in series:
-            if 'DateCreated' in show:
-                date_added = parse_emby_date(show['DateCreated'])
-                if date_added > last_checked:
-                    new_items.append(show)
+            if not is_already_notified(show, notified_ids):
+                new_items.append(show)
 
         # Deduplicate items by ID within the current batch
         seen_batch = set()
@@ -202,7 +202,7 @@ def get_recently_added_media():
                 seen_batch.add(iid)
                 unique_items.append(item)
 
-        # Sort all items by date added descending
+        # Sort all items by date added descending (newest first)
         unique_items.sort(key=lambda x: parse_emby_date(x.get('DateCreated', '')), reverse=True)
         return unique_items
 
@@ -282,7 +282,7 @@ def build_keyboard(item, emby_url):
         "inline_keyboard": [
             [
                 {
-                    "text": "Watch on SN FTP SERVER",
+                    "text": BUTTON_TEXT,
                     "url": emby_url,
                     "style": "success"
                 }
@@ -318,19 +318,26 @@ def send_telegram_message(item, notified_ids):
             except Exception as img_err:
                 print(f"Warning: Failed to download poster for {title}: {img_err}")
 
-        # Send Photo with Caption and Inline Button
+        # Try sending Photo with Caption and Inline Button
+        sent = False
         if photo_bytes:
-            url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
-            data = {
-                'chat_id': TELEGRAM_CHAT_ID,
-                'caption': message,
-                'parse_mode': 'HTML',
-                'reply_markup': json.dumps(reply_markup)
-            }
-            files = {'photo': photo_bytes}
-            response = requests.post(url, data=data, files=files, timeout=30)
-        else:
-            # Fallback to Text message with Inline Button
+            try:
+                url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
+                data = {
+                    'chat_id': TELEGRAM_CHAT_ID,
+                    'caption': message,
+                    'parse_mode': 'HTML',
+                    'reply_markup': json.dumps(reply_markup)
+                }
+                files = {'photo': photo_bytes}
+                response = requests.post(url, data=data, files=files, timeout=30)
+                response.raise_for_status()
+                sent = True
+            except Exception as photo_err:
+                print(f"Photo send failed ({photo_err}). Falling back to text message...")
+
+        # Fallback to Text message if photo was not sent
+        if not sent:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
             data = {
                 'chat_id': TELEGRAM_CHAT_ID,
@@ -340,8 +347,8 @@ def send_telegram_message(item, notified_ids):
                 'disable_web_page_preview': False
             }
             response = requests.post(url, data=data, timeout=30)
+            response.raise_for_status()
 
-        response.raise_for_status()
         print(f"Sent notification for {title} (ID: {item_id})")
         return True
 
@@ -359,7 +366,7 @@ def main():
             notified_ids = get_notified_items()
 
             if new_items:
-                print(f"Found {len(new_items)} candidate items to evaluate")
+                print(f"Found {len(new_items)} new items to notify")
 
                 for item in new_items:
                     if not is_already_notified(item, notified_ids):
@@ -372,7 +379,7 @@ def main():
                     else:
                         print(f"Already notified: {item.get('Name')} (ID: {item.get('Id')})")
 
-            # Save check time in UTC (matching Emby's timestamp reference)
+            # Save check time in UTC
             save_last_checked_time(datetime.now(timezone.utc).replace(tzinfo=None))
             print(f"Check complete. Waiting {CHECK_INTERVAL} seconds until next check...")
             time.sleep(CHECK_INTERVAL)

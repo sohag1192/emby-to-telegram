@@ -144,7 +144,8 @@ def parse_emby_date(date_str):
     return datetime.min
 
 def get_recently_added_media():
-    last_checked = get_last_checked_time()
+    """Retrieve new movies and series that have not yet been notified."""
+    notified_ids = get_notified_items()
     fields = 'Genres,CommunityRating,CriticRating,OfficialRating,RunTimeTicks,MediaSources,Path,DateCreated,PremiereDate,ServerId,ProductionYear,Status'
 
     # Get movies
@@ -180,10 +181,8 @@ def get_recently_added_media():
         movies = response.json().get('Items', [])
 
         for movie in movies:
-            if 'DateCreated' in movie:
-                date_added = parse_emby_date(movie['DateCreated'])
-                if date_added > last_checked:
-                    new_items.append(movie)
+            if not is_already_notified(movie, notified_ids):
+                new_items.append(movie)
 
         # Fetch TV shows
         response = requests.get(series_url, params=series_params, timeout=30)
@@ -191,10 +190,8 @@ def get_recently_added_media():
         series = response.json().get('Items', [])
 
         for show in series:
-            if 'DateCreated' in show:
-                date_added = parse_emby_date(show['DateCreated'])
-                if date_added > last_checked:
-                    new_items.append(show)
+            if not is_already_notified(show, notified_ids):
+                new_items.append(show)
 
         # Deduplicate items by ID within the current batch
         seen_batch = set()
@@ -205,7 +202,7 @@ def get_recently_added_media():
                 seen_batch.add(iid)
                 unique_items.append(item)
 
-        # Sort all items by date added descending
+        # Sort all items by date added descending (newest first)
         unique_items.sort(key=lambda x: parse_emby_date(x.get('DateCreated', '')), reverse=True)
         return unique_items
 
@@ -328,19 +325,26 @@ def send_telegram_message(item, notified_ids):
             except Exception as img_err:
                 print(f"পোস্টার ডাউনলোড করা যায়নি ({title}): {img_err}")
 
-        # Send Photo with Caption and Inline Button
+        # Try sending Photo with Caption and Inline Button
+        sent = False
         if photo_bytes:
-            url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
-            data = {
-                'chat_id': TELEGRAM_CHAT_ID,
-                'caption': message,
-                'parse_mode': 'HTML',
-                'reply_markup': json.dumps(reply_markup)
-            }
-            files = {'photo': photo_bytes}
-            response = requests.post(url, data=data, files=files, timeout=30)
-        else:
-            # Fallback to Text message with Inline Button
+            try:
+                url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
+                data = {
+                    'chat_id': TELEGRAM_CHAT_ID,
+                    'caption': message,
+                    'parse_mode': 'HTML',
+                    'reply_markup': json.dumps(reply_markup)
+                }
+                files = {'photo': photo_bytes}
+                response = requests.post(url, data=data, files=files, timeout=30)
+                response.raise_for_status()
+                sent = True
+            except Exception as photo_err:
+                print(f"পোস্টারসহ ফটো পাঠানো যায়নি ({photo_err})। টেক্সট মেসেজ পাঠানো হচ্ছে...")
+
+        # Fallback to Text message if photo was not sent
+        if not sent:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
             data = {
                 'chat_id': TELEGRAM_CHAT_ID,
@@ -350,8 +354,8 @@ def send_telegram_message(item, notified_ids):
                 'disable_web_page_preview': False
             }
             response = requests.post(url, data=data, timeout=30)
+            response.raise_for_status()
 
-        response.raise_for_status()
         print(f"নোটিফিকেশন সফলভাবে পাঠানো হয়েছে: {title} (ID: {item_id})")
         return True
 
@@ -369,7 +373,7 @@ def main():
             notified_ids = get_notified_items()
 
             if new_items:
-                print(f"{len(new_items)} টি সম্ভাব্য নতুন আইটেম পাওয়া গেছে")
+                print(f"{len(new_items)} টি নতুন আইটেম পাওয়া গেছে")
 
                 for item in new_items:
                     if not is_already_notified(item, notified_ids):
@@ -382,7 +386,7 @@ def main():
                     else:
                         print(f"ইতিমধ্যে নোটিফাইড: {item.get('Name')} (ID: {item.get('Id')})")
 
-            # Save check time in UTC (matching Emby's timestamp reference)
+            # Save check time in UTC
             save_last_checked_time(datetime.now(timezone.utc).replace(tzinfo=None))
             print(f"চেক সম্পন্ন হয়েছে। পরবর্তী চেকের জন্য {CHECK_INTERVAL} সেকেন্ড অপেক্ষা করা হচ্ছে...")
             time.sleep(CHECK_INTERVAL)
