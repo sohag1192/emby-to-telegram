@@ -4,36 +4,17 @@ import html
 import json
 import requests
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # Ensure UTF-8 output on Windows consoles
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-def load_env_file(filepath='.env'):
-    """Load environment variables from a local .env file if it exists."""
-    if os.path.exists(filepath):
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                for line in f:
-                    line = line.strip()
-                    if line and not line.startswith('#') and '=' in line:
-                        key, val = line.split('=', 1)
-                        key = key.strip()
-                        val = val.strip().strip('"').strip("'")
-                        if key and key not in os.environ:
-                            os.environ[key] = val
-        except Exception as e:
-            print(f"Warning: Could not read .env file: {e}")
-
-# Load local .env file
-load_env_file()
-
 # Configuration - Supports environment variables or default values
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'your_bot_token_here')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'your_chat_id_here')
-EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://your-emby-server:8096').rstrip('/')
-EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'your_emby_api_key_here')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '7575077293:AAEYDEH3s_FEwRjcJq6xV3oPrsjZPpncego')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1065232529')
+EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://100.100.100.6:8096').rstrip('/')
+EMBY_API_KEY = os.getenv('EMBY_API_KEY', '605d6b8a19804df390246b2373077ba9')
 
 # Time between checks (in seconds)
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL', '1800'))  # 30 Min
@@ -64,41 +45,100 @@ def format_size(bytes_val):
     return f"{val:.2f} PB"
 
 def get_last_checked_time():
+    """Retrieve last check timestamp in UTC (matching Emby's DateCreated timezone)."""
     try:
         with open(LAST_CHECKED_FILE, 'r') as f:
-            return datetime.strptime(f.read().strip(), '%m/%d/%Y %I:%M:%S %p')
+            content = f.read().strip()
+            if content:
+                return datetime.strptime(content, '%m/%d/%Y %I:%M:%S %p')
     except (FileNotFoundError, ValueError):
-        return datetime.now() - timedelta(hours=24)
+        pass
+    # Fallback to 24 hours ago in UTC
+    return datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=24)
 
 def save_last_checked_time(check_time):
     with open(LAST_CHECKED_FILE, 'w') as f:
         f.write(check_time.strftime('%m/%d/%Y %I:%M:%S %p'))
 
 def get_notified_items():
+    """Read all notified IDs and keys as a set for O(1) instant duplicate detection."""
     try:
-        with open(NOTIFIED_ITEMS_FILE, 'r') as f:
-            return [line.strip() for line in f if line.strip()]
+        with open(NOTIFIED_ITEMS_FILE, 'r', encoding='utf-8') as f:
+            return set(line.strip() for line in f if line.strip())
     except FileNotFoundError:
-        return []
+        return set()
 
-def save_notified_items(item_ids):
-    with open(NOTIFIED_ITEMS_FILE, 'w') as f:
-        for item_id in item_ids:
-            f.write(f"{item_id}\n")
+def append_notified_item(item_key):
+    """Atomically append a single notified key to file so it is never lost or wiped."""
+    with open(NOTIFIED_ITEMS_FILE, 'a', encoding='utf-8') as f:
+        f.write(f"{item_key}\n")
+
+def is_already_notified(item, notified_ids):
+    """Bulletproof check: Verify by both Emby ID and Title+Year key."""
+    item_id = str(item.get('Id', '')).strip()
+    if item_id and item_id in notified_ids:
+        return True
+
+    # Also check normalized title+year key (prevents duplicates if item is re-scanned or re-indexed)
+    name = str(item.get('Name', '')).strip().lower()
+    year = str(item.get('ProductionYear', '')).strip()
+    item_type = str(item.get('Type', '')).strip().lower()
+    if name:
+        clean_name = "".join(c for c in name if c.isalnum() or c.isspace()).replace(" ", "_")
+        title_key = f"title:{item_type}_{clean_name}_{year}"
+        if title_key in notified_ids:
+            return True
+
+    return False
+
+def mark_as_notified(item, notified_ids):
+    """Record both Emby ID and Title+Year key to permanently block duplicate alerts."""
+    item_id = str(item.get('Id', '')).strip()
+    if item_id and item_id not in notified_ids:
+        notified_ids.add(item_id)
+        append_notified_item(item_id)
+
+    name = str(item.get('Name', '')).strip().lower()
+    year = str(item.get('ProductionYear', '')).strip()
+    item_type = str(item.get('Type', '')).strip().lower()
+    if name:
+        clean_name = "".join(c for c in name if c.isalnum() or c.isspace()).replace(" ", "_")
+        title_key = f"title:{item_type}_{clean_name}_{year}"
+        if title_key not in notified_ids:
+            notified_ids.add(title_key)
+            append_notified_item(title_key)
 
 def parse_emby_date(date_str):
+    """
+    Parse Emby ISO 8601 date strings robustly.
+    Handles 7-digit fractional seconds (e.g. 2026-11-02T13:11:22.0000000Z).
+    Returns datetime.min on error (NEVER datetime.now) so errors cannot cause duplicate alerts.
+    """
+    if not date_str:
+        return datetime.min
+
+    clean_str = date_str.rstrip('Z')
+    if '.' in clean_str:
+        base, frac = clean_str.split('.', 1)
+        clean_str = f"{base}.{frac[:6]}"
+
+    try:
+        return datetime.fromisoformat(clean_str)
+    except Exception:
+        pass
+
     formats = [
-        '%m/%d/%Y %I:%M:%S %p',    # 05/08/2025 06:48:43 AM
-        '%Y-%m-%dT%H:%M:%S.%fZ',  # ISO format with milliseconds
-        '%Y-%m-%dT%H:%M:%SZ',      # ISO format without milliseconds
-        '%Y-%m-%d %H:%M:%S'        # Alternative format
+        '%m/%d/%Y %I:%M:%S %p',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y-%m-%dT%H:%M:%S'
     ]
     for fmt in formats:
         try:
-            return datetime.strptime(date_str, fmt)
+            return datetime.strptime(clean_str, fmt)
         except ValueError:
             continue
-    return datetime.now()
+
+    return datetime.min
 
 def get_recently_added_media():
     last_checked = get_last_checked_time()
@@ -131,7 +171,7 @@ def get_recently_added_media():
     new_items = []
 
     try:
-        # Get movies
+        # Fetch movies
         response = requests.get(movies_url, params=movies_params, timeout=30)
         response.raise_for_status()
         movies = response.json().get('Items', [])
@@ -142,7 +182,7 @@ def get_recently_added_media():
                 if date_added > last_checked:
                     new_items.append(movie)
 
-        # Get TV shows
+        # Fetch TV shows
         response = requests.get(series_url, params=series_params, timeout=30)
         response.raise_for_status()
         series = response.json().get('Items', [])
@@ -153,9 +193,18 @@ def get_recently_added_media():
                 if date_added > last_checked:
                     new_items.append(show)
 
+        # Deduplicate items by ID within the current batch
+        seen_batch = set()
+        unique_items = []
+        for item in new_items:
+            iid = str(item.get('Id', '')).strip()
+            if iid and iid not in seen_batch:
+                seen_batch.add(iid)
+                unique_items.append(item)
+
         # Sort all items by date added descending
-        new_items.sort(key=lambda x: parse_emby_date(x['DateCreated']), reverse=True)
-        return new_items
+        unique_items.sort(key=lambda x: parse_emby_date(x.get('DateCreated', '')), reverse=True)
+        return unique_items
 
     except Exception as e:
         print(f"Error fetching media from Emby: {e}")
@@ -242,9 +291,9 @@ def build_keyboard(item, emby_url):
     }
 
 def send_telegram_message(item, notified_ids):
-    item_id = item['Id']
-    if item_id in notified_ids:
-        print(f"Notification already sent for item ID: {item_id} ({item.get('Name', 'Unknown')})")
+    item_id = str(item.get('Id', '')).strip()
+    if is_already_notified(item, notified_ids):
+        print(f"Skipping: Notification already sent for {item.get('Name', 'Unknown')} (ID: {item_id})")
         return False
 
     try:
@@ -308,23 +357,23 @@ def main():
 
             new_items = get_recently_added_media()
             notified_ids = get_notified_items()
-            newly_notified_ids = list(notified_ids)
 
             if new_items:
-                print(f"Found {len(new_items)} potentially new items")
+                print(f"Found {len(new_items)} candidate items to evaluate")
 
                 for item in new_items:
-                    if item['Id'] not in notified_ids:
+                    if not is_already_notified(item, notified_ids):
                         success = send_telegram_message(item, notified_ids)
                         if success:
-                            newly_notified_ids.append(item['Id'])
-                            notified_ids.append(item['Id'])
-                            save_notified_items(newly_notified_ids)
+                            mark_as_notified(item, notified_ids)
                         if success and item != new_items[-1]:
                             print(f"Waiting {MESSAGE_DELAY} seconds before next message...")
                             time.sleep(MESSAGE_DELAY)
+                    else:
+                        print(f"Already notified: {item.get('Name')} (ID: {item.get('Id')})")
 
-            save_last_checked_time(datetime.now())
+            # Save check time in UTC (matching Emby's timestamp reference)
+            save_last_checked_time(datetime.now(timezone.utc).replace(tzinfo=None))
             print(f"Check complete. Waiting {CHECK_INTERVAL} seconds until next check...")
             time.sleep(CHECK_INTERVAL)
 
