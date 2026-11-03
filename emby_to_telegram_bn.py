@@ -13,10 +13,12 @@ if hasattr(sys.stdout, 'reconfigure'):
 __version__ = '3.0'
 
 # Configuration - Supports environment variables or default values
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', '7575077293:AAEYDEH3s_FEwRjcJq6xV3oPrsjZPpncego')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', '1065232529')
-EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://100.100.100.6:8096').rstrip('/')
-EMBY_API_KEY = os.getenv('EMBY_API_KEY', '605d6b8a19804df390246b2373077ba9')
+
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'ADD YOUR TELEGRAM_TOKEN')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ADD YOUR TELEGRAM_CHAT_ID')
+EMBY_SERVER = os.getenv('EMBY_SERVER', ' ADD YOUR EMBY_SERVER  http://192.168.1.100:8096 OR https://emby.yourdomain.com').rstrip('/')
+EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'ADD YOUR EMBY_API_KEY')
+
 
 # Button text (can be customized via environment variable)
 BUTTON_TEXT = os.getenv('BUTTON_TEXT', 'Watch on SN FTP SERVER')
