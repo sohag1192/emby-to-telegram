@@ -47,7 +47,6 @@ An automated, lightweight background service for **Ubuntu / Linux** that monitor
 - 🔄 **Autonomous 24/7 Background Service**: Runs seamlessly as a native `systemd` daemon on Ubuntu/Linux with automatic restarts on crash or system boot.
 - 🛡️ **Guaranteed Duplicate Prevention**: Double-locking protection tracks both Emby Item IDs and normalized Title keys with immediate atomic disk persistence (`emby_notified.txt`). Items will **never** be sent twice.
 - 🎬 **Multi-Media Monitoring**: Automatically detects newly added **Movies** and **TV Series**.
-- 🌐 **Multilingual Notification Support**: Send notification alerts in **English (`en`)**, **Bengali (`bn`)**, or **Bilingual (`both`)**.
 - 📊 **Rich Metadata Cards**:
   - 📌 Title and release year
   - ⭐ Community Rating (`8.3/10`) & 🍅 Critic Rating (`73%`)
@@ -93,11 +92,15 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
    ```bash
    nano emby_to_telegram.py
    ```
-   Set your `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `EMBY_SERVER`, `EMBY_API_KEY`, and optional `NOTIFICATION_LANGUAGE` (`en` or `bn`).
+   Set your `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`, `EMBY_SERVER`, and `EMBY_API_KEY`.
 
 3. **Run the 1-click installer script:**
    ```bash
+   # For English notifications:
    sudo bash install.sh
+
+   # For Bengali (বাংলা) notifications:
+   sudo bash install.sh emby_to_telegram_bn.py
    ```
 
 > **What `install.sh` does automatically:**
@@ -105,6 +108,7 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 > - Creates isolated virtual environment and installs dependencies.
 > - Configures and registers `emby-to-telegram.service` in systemd.
 > - Enables automatic startup on boot and starts the service immediately.
+> - Supports both English (`emby_to_telegram.py`) and Bengali (`emby_to_telegram_bn.py`)!
 
 ---
 
@@ -165,7 +169,6 @@ Inside `emby_to_telegram.py` (or via system environment variables):
 | `TELEGRAM_CHAT_ID` | Telegram Channel/Group/User ID | *Required* |
 | `EMBY_SERVER` | Base URL of your Emby server (e.g. `http://100.100.100.6:8096`) | *Required* |
 | `EMBY_API_KEY` | Emby API Key (*Emby Dashboard > Advanced > API Keys*) | *Required* |
-| `NOTIFICATION_LANGUAGE` | Notification language: `en` (English), `bn` (বাংলা), or `both` | `'en'` |
 | `CHECK_INTERVAL` | Interval between library checks in seconds | `1800` (30 mins) |
 | `MESSAGE_DELAY` | Delay between consecutive Telegram messages in seconds | `10` |
 

@@ -5,11 +5,12 @@
 
 set -e
 
-# Detect script directory
+# Detect script directory and target script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_SCRIPT="${1:-emby_to_telegram.py}"
 
 echo "=========================================================="
-echo "🎬 Installing Emby to Telegram Notifier"
+echo "🎬 Installing Emby to Telegram Notifier ($TARGET_SCRIPT)"
 echo "📂 Directory: $SCRIPT_DIR"
 echo "=========================================================="
 
@@ -49,7 +50,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=$SCRIPT_DIR
-ExecStart=$SCRIPT_DIR/venv/bin/python $SCRIPT_DIR/emby_to_telegram.py
+ExecStart=$SCRIPT_DIR/venv/bin/python $SCRIPT_DIR/$TARGET_SCRIPT
 Restart=always
 RestartSec=10
 
