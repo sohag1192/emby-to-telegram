@@ -4,7 +4,8 @@
 
 An automated, lightweight background service for **Windows & Ubuntu / Linux** that monitors your **Emby Media Server** and broadcasts sleek, media-rich notifications with interactive action buttons directly to your **Telegram** channel, group, or private chat.
 
-[![Release](https://img.shields.io/badge/Release-v3.0-blueviolet?style=for-the-badge&logo=github)](https://github.com/sohag1192/emby-to-telegram/releases)
+[![Latest Release](https://img.shields.io/github/v/release/sohag1192/emby-to-telegram?style=for-the-badge&logo=github&color=blueviolet)](https://github.com/sohag1192/emby-to-telegram/releases/latest)
+[![Download ZIP](https://img.shields.io/badge/Download-ZIP%20Package-brightgreen?style=for-the-badge&logo=files)](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011%20%7C%20Server-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -32,18 +33,6 @@ An automated, lightweight background service for **Windows & Ubuntu / Linux** th
 
 ---
 
-## 📸 Telegram Notifications Preview
-
-<div align="center">
-
-| 🎬 Movie Notification Card | 📺 TV Series Notification Card |
-| :---: | :---: |
-| <img src="Screenshot_30.png" width="380" alt="Movie Card Preview" /> | <img src="Screenshot_31.png" width="380" alt="TV Series Card Preview" /> |
-
-</div>
-
----
-
 ## ✨ Features
 
 - 🔄 **Autonomous 24/7 Background Service**: Runs seamlessly as a native `systemd` daemon on Ubuntu/Linux with automatic restarts on crash or system boot.
@@ -63,8 +52,15 @@ An automated, lightweight background service for **Windows & Ubuntu / Linux** th
 
 ---
 
-## 🚀 What's New in Version 3.0 (v3.0)
+## 🚀 What's New in Version 3.1 (v3.1)
 
+- 🤖 **Automated GitHub Release Workflow (`.github/workflows/release.yml`)**:
+  - Automatically packages clean release zip files (`emby-to-telegram-v*.zip` & `emby-to-telegram-latest.zip`) whenever a tag is pushed.
+  - Automatically generates changelog and publishes GitHub Releases.
+- 🏷️ **Smart Version Bump & Upload Script (`upload_to_github.BAT`)**:
+  - 1-Click interactive release tool: detects current tag, calculates next version, auto-updates `__version__` in Python files, commits, tags, and pushes to trigger GitHub Actions release.
+- 📦 **Direct ZIP Download**:
+  - Dedicated badges and one-click ZIP download options for users without Git.
 - 🪟 **Dedicated Windows Package (`windows/`)**:
   - `install.bat`: 1-Click installer and automatic Windows Startup boot integration.
   - `run.bat`: Always-Run console launcher with continuous auto-restart loop on crashes.
@@ -79,8 +75,6 @@ An automated, lightweight background service for **Windows & Ubuntu / Linux** th
   - Complete duplicate filtering and automatic text fallback when poster images are unavailable.
 - 🧹 **Clean Repository Architecture**:
   - Modular directory organization (`windows/`, `linux/`) and runtime files properly ignored in `.gitignore`.
-- 🚀 **Updated GitHub Deployment Tool (`upload_to_github.BAT`)**:
-  - Version-tagged git synchronization tool supporting release v3.0 tags and rebase workflows.
 
 ---
 
@@ -100,6 +94,30 @@ Check out these other open-source projects for Emby Media Server by [@sohag1192]
 * An active **Emby Media Server** with an API key
 * A **Telegram Bot Token** (from [@BotFather](https://t.me/BotFather))
 * A destination **Telegram Chat ID** (Channel, Group, or User ID)
+
+---
+
+## 📥 Download ZIP (No Git Required)
+
+If you don't have Git installed, you can download the project as a `.zip` archive:
+
+| Download Link | Description |
+| :--- | :--- |
+| 📦 [**Download Latest ZIP Archive**](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip) | Direct download of the latest code as a `.zip` archive |
+| 🏷️ [**Download from Releases Page**](https://github.com/sohag1192/emby-to-telegram/releases/latest) | Standalone release package with changelog and assets |
+
+### 🚀 Quick Start (ZIP Package):
+1. **Download & Extract**: Download [emby-to-telegram.zip](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip) and extract it anywhere on your system.
+2. **Configure Credentials**: Open `emby_to_telegram.py` (or `emby_to_telegram_bn.py` for Bengali) or create a `.env` file with your settings:
+   ```python
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'YOUR_TELEGRAM_BOT_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'YOUR_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://192.168.1.100:8096').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'YOUR_EMBY_API_KEY')
+   ```
+3. **Run 1-Click Installer**:
+   - **Windows**: Double-click `windows/install.bat`
+   - **Linux / Ubuntu**: Run `bash linux/install.sh`
 
 ---
 

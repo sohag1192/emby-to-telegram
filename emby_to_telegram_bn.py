@@ -28,7 +28,7 @@ def load_env_file(filepath='.env'):
 
 load_env_file()
 
-__version__ = '3.0'
+__version__ = '3.1'
 
 # ==========================================================
 # ⚙️ কনফিগারেশন - Environment Variables, .env ফাইল বা ডিফল্ট ভ্যালু সাপোর্ট করে

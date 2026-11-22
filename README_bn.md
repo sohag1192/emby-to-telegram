@@ -4,7 +4,8 @@
 
 **উইন্ডোজ এবং উবুন্টু / লিনাক্স (Windows & Ubuntu / Linux)**-এর জন্য একটি স্বয়ংক্রিয় ও লাইটওয়েট ব্যাকগ্রাউন্ড সার্ভিস, যা আপনার **এমবি মিডিয়া সার্ভার (Emby Media Server)** প্রতিনিয়ত পর্যবেক্ষণ করে এবং নতুন যুক্ত হওয়া মুভি ও টিভি সিরিজের আকর্ষণীয় পোস্টার ও বিস্তারিত তথ্যসহ সরাসরি আপনার **টেলিগ্রাম** চ্যানেল, গ্রুপ বা চ্যাটে নোটিফিকেশন পাঠায়।
 
-[![Release](https://img.shields.io/badge/Release-v3.0-blueviolet?style=for-the-badge&logo=github)](https://github.com/sohag1192/emby-to-telegram/releases)
+[![Latest Release](https://img.shields.io/github/v/release/sohag1192/emby-to-telegram?style=for-the-badge&logo=github&color=blueviolet)](https://github.com/sohag1192/emby-to-telegram/releases/latest)
+[![Download ZIP](https://img.shields.io/badge/Download-ZIP%20Package-brightgreen?style=for-the-badge&logo=files)](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011%20%7C%20Server-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -32,18 +33,6 @@
 
 ---
 
-## 📸 টেলিগ্রাম নোটিফিকেশন প্রিভিউ
-
-<div align="center">
-
-| 🎬 মুভি নোটিফিকেশন কার্ড | 📺 টিভি সিরিজ নোটিফিকেশন কার্ড |
-| :---: | :---: |
-| <img src="Screenshot_30.png" width="380" alt="Movie Card Preview" /> | <img src="Screenshot_31.png" width="380" alt="TV Series Card Preview" /> |
-
-</div>
-
----
-
 ## ✨ মূল বৈশিষ্ট্যসমূহ (Features)
 
 - 🔄 **২৪/৭ নিরবচ্ছিন্ন ব্যাকগ্রাউন্ড সার্ভিস**: উবুন্টু/লিনাক্সে নেটিভ `systemd` সার্ভিস হিসেবে চলে। সার্ভার রিস্টার্ট বা ক্র্যাশ করলেও স্বয়ংক্রিয়ভাবে পুনরায় চালু হয়।
@@ -63,8 +52,14 @@
 
 ---
 
-## 🚀 নতুন ভার্সন ৩.০ আপডেট (What's New in v3.0)
+## 🚀 নতুন ভার্সন ৩.১ আপডেট (What's New in v3.1)
 
+- 🤖 **স্বয়ংক্রিয় গিটহাব রিলিজ ওয়ার্কফ্লো (`.github/workflows/release.yml`)**:
+  - প্রতিটি নতুন ভার্সন ট্যাগ পুশ হলেই স্বয়ংক্রিয়ভাবে ক্লিন জিপ ফাইল (`emby-to-telegram-v*.zip` ও `emby-to-telegram-latest.zip`) তৈরি করে এবং GitHub Releases-এ প্রকাশ করে।
+- 🏷️ **স্মার্ট ভার্সন বাম্প ও আপলোড স্ক্রিপ্ট (`upload_to_github.BAT`)**:
+  - ১-ক্লিকেই বর্তমান ট্যাগ শনাক্ত করা, পরবর্তী ভার্সন হিসাব করা, স্বয়ংক্রিয়ভাবে পাইথন ফাইলে `__version__` আপডেট করা এবং গিট ট্যাগ পুশ করে অটো-রিলিজ ট্রিগার করার সুবিধা।
+- 📦 **সরাসরি এক-ক্লিকে ZIP ডাউনলোড লিঙ্ক**:
+  - যারা গিট ব্যবহার করতে চান না তাদের জন্য সরাসরি জিপ ফাইল ডাউনলোড করার সুবিধা।
 - 🪟 **উইন্ডোজের জন্য ডেডিকেটেড প্যাকেজ (`windows/`)**:
   - `install.bat`: ১-ক্লিক ইনস্টলার এবং স্বয়ংক্রিয়ভাবে উইন্ডোজ বুটে চালু হওয়ার সুবিধা।
   - `run.bat`: অলওয়েজ-রান কনসোল স্ক্রিপ্ট, যা ক্র্যাশ করলেও ১০ সেকেন্ড পর অটো-রিস্টার্ট হয়।
@@ -79,8 +74,6 @@
   - কোনো কনটেন্ট কখনোই দুইবার যাবে না এবং ইমেজ না পেলে স্বয়ংক্রিয় টেক্সট নোটিফিকেশন যাবে।
 - 🧹 **পরিচ্ছন্ন প্রজেক্ট স্ট্রাকচার**:
   - প্রতিটি ওএস অনুযায়ী সুন্দর ফোল্ডার বিন্যাস এবং অপ্রয়োজনীয় ক্যাশ(`.gitignore`)-এ যুক্ত।
-- 🚀 **আপগ্রেডেড গিটহাব আপলোড টুল (`upload_to_github.BAT`)**:
-  - স্বয়ংক্রিয় Git Tag v3.0 পুশ, রিবেস হ্যান্ডলিং এবং রিলিজ ম্যানেজমেন্ট।
 
 ---
 
@@ -100,6 +93,30 @@
 * একটি সক্রিয় **Emby Media Server** এবং API Key
 * একটি **Telegram Bot Token** ([@BotFather](https://t.me/BotFather) থেকে প্রাপ্ত)
 * গন্তব্য **Telegram Chat ID** (চ্যানেল, গ্রুপ, বা পার্সোনাল আইডি)
+
+---
+
+## 📥 সরাসরি ZIP ডাউনলোড (গিট ছাড়া)
+
+আপনার সিস্টেমে Git ইনস্টল করা না থাকলে আপনি সরাসরি `.zip` ফাইল ডাউনলোড করে প্রজেক্টটি চালাতে পারেন:
+
+| ডাউনলোড লিংক | বিবরণ |
+| :--- | :--- |
+| 📦 [**সর্বশেষ ZIP আর্কাইভ ডাউনলোড**](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip) | মেইন ব্র্যাঞ্চের সর্বশেষ কোডের সরাসরি জিপ আর্কাইভ |
+| 🏷️ [**রিলিজ পেজ থেকে প্যাকেজ ডাউনলোড**](https://github.com/sohag1192/emby-to-telegram/releases/latest) | অফিশিয়াল রিলিজ প্যাকেজ এবং চেইঞ্জলগ |
+
+### 🚀 কুইক স্টার্ট (ZIP প্যাকেজ):
+1. **ডাউনলোড ও এক্সট্র্যাক্ট**: [emby-to-telegram.zip](https://github.com/sohag1192/emby-to-telegram/archive/refs/heads/main.zip) ডাউনলোড করে যেকোনো ফোল্ডারে আনজিপ (Extract) করুন।
+2. **ক্রেডেনশিয়াল কনফিগার**: `emby_to_telegram_bn.py` (অথবা ইংরেজি সংস্করণের জন্য `emby_to_telegram.py`) ওপেন করে অথবা একটি `.env` ফাইল তৈরি করে আপনার টোকেন ও সার্ভার তথ্য বসিয়ে দিন:
+   ```python
+   TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN', 'YOUR_TELEGRAM_BOT_TOKEN')
+   TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'YOUR_CHAT_ID')
+   EMBY_SERVER = os.getenv('EMBY_SERVER', 'http://192.168.1.100:8096').rstrip('/')
+   EMBY_API_KEY = os.getenv('EMBY_API_KEY', 'YOUR_EMBY_API_KEY')
+   ```
+3. **১-ক্লিক ইনস্টলার চালান**:
+   - **উইন্ডোজ (Windows)**: `windows/install.bat`-এ ডাবল-ক্লিক করুন।
+   - **লিনাক্স (Linux / Ubuntu)**: টার্মিনালে `bash linux/install.sh` চালান।
 
 ---
 

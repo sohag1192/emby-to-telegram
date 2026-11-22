@@ -28,7 +28,7 @@ def load_env_file(filepath='.env'):
 
 load_env_file()
 
-__version__ = '3.0'
+__version__ = '3.1'
 
 # ==========================================================
 # ⚙️ Configuration - Supports environment variables, .env file, or defaults
